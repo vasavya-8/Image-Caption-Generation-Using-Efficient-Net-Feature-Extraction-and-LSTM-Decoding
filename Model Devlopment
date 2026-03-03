@@ -1,53 +1,36 @@
-DataPreparation
-The Flickr8kdataset,consistingof8,000imageseachpairedwithfivedescriptivecaptions,
-servesasthefoundationofthesystem.Thedatapreparationprocessinvolves:
-• Cleaning Captions: Removing special characters, converting to lower case,and eliminating
-unnecessary spaces.
-• Tokenization: Breakingdowncaptionsintoindividualwordsandmappingthemtonu-
-merical sequencesusingatokenizer.
-• VocabularyCreation: Generatingadictionaryofuniquewordsandcorrespondinginteger
-mappings.
-• Image Preprocessing: ResizingimagestotheinputdimensionsrequiredbyEfficientNetB0
-and normalizingpixelvalues.
-Model Development:
- EfficientNetB0
-The encoderactsasthe”vision”ofthesystem.It’sresponsibleforinterpretingtherawimage
-and convertingitintoacompactnumericalformatthatcanbeunderstoodbythelanguage
-model.Inthisproject,weuseEfficientNetB0,alightweightandpowerfulconvolutionalneural
-networkthat’sbeentrainedontheImageNetdataset.Ratherthanusingthenetwork’sfinal
-classification output(whichpredictsobjectlabels),weremovethetopclassificationlayerand
-extract featuresfromthesecond-to-lastlayer.Thesefeaturesrepresentthekeyvisualpatterns
-in theimage,suchasshapes,colors,textures,andobjectpositions,summarizedinafixed-length
-vector.
-The decoderisthe“languageengine”ofthesystem.Ittakestheimagesummary(fromthe
-encoder)andprogressivelygeneratesadescriptioninnaturallanguage,wordbyword.Weusea
-Long Short-TermMemory(LSTM)network,whichisatypeofrecurrentneuralnetwork(RNN)
-knownforhandlingsequenceswithlong-rangedependencies.
-• EmbeddingLayer: Convertsinputwordsintodensevectorsthatpreservetherelation-
-ships betweenwords(semantics).
-• Dense LayerwithSoftmax: Outputs aprobabilitydistributionoverallpossiblewords,
-selecting themostlikelynextword.
-• LSTM Layer: Takestheimagevectorandthepreviouswordsinthesentencetopredict
-the nextword.Itmaintainsmemoryofthesentencestructureandmeaningasmorewords
-are added.
+Here is your content rewritten clearly with proper word spacing and formatting:
 
-ImplementationandResults:
-EvaluationMetrics:
-BLEU(BilingualEvaluationUnderstudy)
-Measures theoverlapbetweenn-grams(contiguouswordsequences)inthegeneratedandref-
-erence captions.
-Common Variants:BLEU-1(unigrams),BLEU-2(bigrams),BLEU-3,BLEU-4.
 
-METEOR(MetricforEvaluationofTranslationwithExplicitORdering)
-Focusesonexactmatches,stemming,andsynonymmatching.Advantages:Moresensitive
-to wordorderingandmeaningthanBLEU.
+## Data Preparation
 
-ROUGE(Recall-OrientedUnderstudyforGistingEvaluation)
-Purpose:Measurestheoverlapofn-grams,focusingonrecall.Variants:ROUGE-N(e.g.,
-ROUGE-1,ROUGE-2),ROUGE-L(LongestCommonSubsequence)
-Result:
-The modelwastrainedover20epochs,duringwhichthelosssteadilydecreasedfrom5.8466to
-0.5602, indicatingeffectivelearning.Asamplecaptiongeneratedforatestimage—”alittlegirl
-climbingintoawoodenplayhouse”—demonstratedthemodel’sabilitytogeneratesemantically
-accurate descriptions.EvaluationmetricssuchasBLEU,METEOR,andROUGEconfirmed
+The **Flickr8k dataset**, consisting of 8,000 images each paired with five descriptive captions, serves as the foundation of the system. The data preparation process involves several important steps:
+
+* **Cleaning Captions:** Removing special characters, converting text to lowercase, and eliminating unnecessary spaces to ensure uniformity.
+* **Tokenization:** Breaking down captions into individual words and mapping them into numerical sequences using a tokenizer.
+* **Vocabulary Creation:** Generating a dictionary of unique words and assigning corresponding integer mappings to each word.
+* **Image Preprocessing:** Resizing images to the input dimensions required by EfficientNetB0 and normalizing pixel values for better model performance.
+
+
+## Model Development
+
+### EfficientNetB0 (Encoder)
+
+The encoder acts as the “vision” component of the system. It is responsible for interpreting the raw image and converting it into a compact numerical representation that can be understood by the language model.
+
+In this project, **EfficientNetB0**, a lightweight and powerful convolutional neural network pre-trained on the ImageNet dataset, is used. Instead of using the final classification output layer (which predicts object labels), the top classification layer is removed. Features are extracted from the second-to-last layer.
+
+These extracted features represent key visual patterns in the image, such as shapes, colors, textures, and object positions. The information is summarized into a fixed-length feature vector that serves as input to the decoder.
+
+
+### LSTM (Decoder)
+
+The decoder functions as the “language engine” of the system. It takes the image feature vector from the encoder and progressively generates a natural language description, word by word.
+
+A **Long Short-Term Memory (LSTM)** network is used, which is a type of recurrent neural network (RNN) capable of handling sequences with long-range dependencies.
+
+Key components include:
+
+* **Embedding Layer:** Converts input words into dense vector representations that preserve semantic relationships between words.
+* **LSTM Layer:** Takes the image feature vector along with previously generated words to predict the next word in the sequence.
+* **Dense Layer with Softmax:** Produces a probability distribution over all possible words and selects the most likely next word to form the caption.
 
